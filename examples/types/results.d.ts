@@ -1291,6 +1291,7 @@ export interface ModelConfigResultItem {
     enableDirectAudioProcessing: boolean;
     enableDirectVideoProcessing: boolean;
     enableGoogleSearch: boolean;
+    enableClaude1hPromptCache: boolean;
     enableToolCall: boolean;
     requestLimitPerMinute: number;
     maxConcurrentRequests: number;

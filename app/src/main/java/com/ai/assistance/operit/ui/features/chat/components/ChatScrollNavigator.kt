@@ -322,7 +322,6 @@ internal fun ChatScrollNavigator(
     val currentIsDragged by rememberUpdatedState(isDragged)
     val coroutineScope = rememberCoroutineScope()
     var showNavigatorChip by remember { mutableStateOf(false) }
-    var showScrollToBottomAction by remember { mutableStateOf(false) }
     var userScrollSessionActive by remember { mutableStateOf(false) }
     var showLocatorDialog by remember { mutableStateOf(false) }
     var currentMessageIndex by remember(chatHistory) {
@@ -332,12 +331,6 @@ internal fun ChatScrollNavigator(
     val currentHasNewerDisplayHistory by rememberUpdatedState(hasNewerDisplayHistory)
     val currentOnRequestLatestMessages by rememberUpdatedState(onRequestLatestMessages)
     val currentOnAutoScrollToBottomChange by rememberUpdatedState(onAutoScrollToBottomChange)
-
-    LaunchedEffect(autoScrollToBottom) {
-        if (autoScrollToBottom) {
-            showScrollToBottomAction = false
-        }
-    }
 
     LaunchedEffect(isDragged) {
         if (isDragged) {
@@ -391,7 +384,6 @@ internal fun ChatScrollNavigator(
                     if (movedAwayFromBottom) {
                         if (currentAutoScrollToBottom && currentIsDragged) {
                             currentOnAutoScrollToBottomChange?.invoke(false)
-                            showScrollToBottomAction = true
                         }
                     } else {
                         val isAtBottom =
@@ -399,7 +391,6 @@ internal fun ChatScrollNavigator(
                                 !currentHasNewerDisplayHistory
                         if (isAtBottom && !currentAutoScrollToBottom) {
                             currentOnAutoScrollToBottomChange?.invoke(true)
-                            showScrollToBottomAction = false
                         }
                     }
                 }
@@ -469,111 +460,100 @@ internal fun ChatScrollNavigator(
                 (progressIndex.toFloat() / (progressTotalCount - 1).toFloat()).coerceIn(0f, 1f)
             }
 
-        Box(
-            modifier = Modifier.size(width = 34.dp, height = 114.dp),
-        ) {
-            if (showNavigatorChip) {
-                Row(
-                    modifier =
-                        Modifier
-                            .align(Alignment.CenterStart)
-                            .offset(x = 4.5.dp)
-                            .clickable {
-                                showLocatorDialog = true
-                                showNavigatorChip = false
-                                userScrollSessionActive = false
-                            },
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Box(
-                        modifier =
-                            Modifier
-                                .clip(navigatorShape)
-                                .background(bubbleColor)
-                                .border(1.dp, navigatorBorderColor, navigatorShape),
-                    ) {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .width(20.dp)
-                                    .height(58.dp)
-                                    .padding(vertical = 8.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Canvas(modifier = Modifier.size(width = 8.dp, height = 34.dp)) {
-                                val centerX = size.width / 2f
-                                val topY = 2.dp.toPx()
-                                val bottomY = size.height - 2.dp.toPx()
-                                val dotCenterY = topY + (bottomY - topY) * progress
-                                drawLine(
-                                    color = anchorLineColor,
-                                    start = Offset(centerX, topY),
-                                    end = Offset(centerX, bottomY),
-                                    strokeWidth = 1.5.dp.toPx(),
-                                )
-                                drawCircle(
-                                    color = anchorDotColor,
-                                    radius = 3.dp.toPx(),
-                                    center = Offset(centerX, dotCenterY),
-                                )
-                            }
-                        }
-                    }
-
-                    Canvas(
-                        modifier =
-                            Modifier
-                                .offset(x = (-1).dp)
-                                .size(width = 9.dp, height = 18.dp),
-                    ) {
-                        val arrowPath =
-                            Path().apply {
-                                moveTo(0f, 0f)
-                                lineTo(size.width, size.height / 2f)
-                                lineTo(0f, size.height)
-                                close()
-                            }
-                        drawPath(path = arrowPath, color = bubbleColor)
-                    }
-                }
-            }
-
-            AnimatedVisibility(
-                visible = showScrollToBottomAction,
-                enter = fadeIn(animationSpec = tween(120)),
-                exit = fadeOut(animationSpec = tween(120)),
+        Box(modifier = Modifier.size(width = 34.dp, height = 114.dp)) {
+            Row(
+                modifier =
+                    Modifier
+                        .align(Alignment.CenterStart)
+                        .offset(x = 4.5.dp)
+                        .clickable {
+                            showLocatorDialog = true
+                            showNavigatorChip = false
+                            userScrollSessionActive = false
+                        },
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
                     modifier =
                         Modifier
-                            .size(24.dp)
-                            .align(Alignment.TopStart)
-                            .offset(x = 2.5.dp, y = 90.dp)
-                            .clip(CircleShape)
+                            .clip(navigatorShape)
                             .background(bubbleColor)
-                            .border(1.dp, navigatorBorderColor, CircleShape)
-                            .clickable {
-                                coroutineScope.launch {
-                                    if (currentHasNewerDisplayHistory) {
-                                        currentOnRequestLatestMessages?.invoke()
-                                    }
-                                    scrollState.animateScrollTo(scrollState.maxValue)
-                                }
-                                currentOnAutoScrollToBottomChange?.invoke(true)
-                                showScrollToBottomAction = false
-                            },
+                            .border(1.dp, navigatorBorderColor, navigatorShape),
                 ) {
                     Box(
-                        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+                        modifier =
+                            Modifier
+                                .width(20.dp)
+                                .height(58.dp)
+                                .padding(vertical = 8.dp),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = stringResource(R.string.history_scroll_to_bottom),
-                            tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.92f),
-                            modifier = Modifier.size(16.dp),
-                        )
+                        Canvas(modifier = Modifier.size(width = 8.dp, height = 34.dp)) {
+                            val centerX = size.width / 2f
+                            val topY = 2.dp.toPx()
+                            val bottomY = size.height - 2.dp.toPx()
+                            val dotCenterY = topY + (bottomY - topY) * progress
+                            drawLine(
+                                color = anchorLineColor,
+                                start = Offset(centerX, topY),
+                                end = Offset(centerX, bottomY),
+                                strokeWidth = 1.5.dp.toPx(),
+                            )
+                            drawCircle(
+                                color = anchorDotColor,
+                                radius = 3.dp.toPx(),
+                                center = Offset(centerX, dotCenterY),
+                            )
+                        }
                     }
+                }
+
+                Canvas(
+                    modifier =
+                        Modifier
+                            .offset(x = (-1).dp)
+                            .size(width = 9.dp, height = 18.dp),
+                ) {
+                    val arrowPath =
+                        Path().apply {
+                            moveTo(0f, 0f)
+                            lineTo(size.width, size.height / 2f)
+                            lineTo(0f, size.height)
+                            close()
+                        }
+                    drawPath(path = arrowPath, color = bubbleColor)
+                }
+            }
+
+            Box(
+                modifier =
+                    Modifier
+                        .size(24.dp)
+                        .align(Alignment.TopStart)
+                        .offset(x = 2.5.dp, y = 90.dp)
+                        .clip(CircleShape)
+                        .background(bubbleColor)
+                        .border(1.dp, navigatorBorderColor, CircleShape)
+                        .clickable {
+                            coroutineScope.launch {
+                                if (currentHasNewerDisplayHistory) {
+                                    currentOnRequestLatestMessages?.invoke()
+                                }
+                                scrollState.animateScrollTo(scrollState.maxValue)
+                            }
+                            currentOnAutoScrollToBottomChange?.invoke(true)
+                        },
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = stringResource(R.string.history_scroll_to_bottom),
+                        tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.92f),
+                        modifier = Modifier.size(16.dp),
+                    )
                 }
             }
         }

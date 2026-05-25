@@ -3521,6 +3521,8 @@
     <string name="unlocked">未锁定</string>
     <string name="lock_chat">锁定聊天</string>
     <string name="unlock_chat">取消锁定</string>
+    <string name="pin_chat">置顶聊天</string>
+    <string name="unpin_chat">取消置顶</string>
     <string name="select_date">选择日期</string>
     <string name="input_field_placeholder">请输入%s信息</string>
     <string name="not_set_field">未设置%s</string>
@@ -3731,6 +3733,8 @@
     <string name="enable_direct_video_processing_desc">启用后，视频将直接发送给AI处理，而不是通过工具抽帧/分析</string>
     <string name="enable_google_search">启用 Google Search</string>
     <string name="enable_google_search_desc">启用后，Gemini 将使用 Google 搜索来增强回答（可能产生额外费用）</string>
+    <string name="enable_claude_1h_prompt_cache">启用 Claude 1 小时提示缓存</string>
+    <string name="enable_claude_1h_prompt_cache_desc">启用后，Claude 和 Claude 兼容供应商的提示缓存 TTL 将使用 1 小时</string>
     <string name="enable_tool_call">模型支持ToolCall</string>
     <string name="enable_tool_call_desc">关闭时，会使用软件内工具调用机制，也可以完成工具调用。开启后，将会使用API的专用接口进行原生工具调用（需要模型支持）</string>
     <string name="enable_deepseek_reasoning">启用 DeepSeek 推理模式</string>
@@ -3990,6 +3994,11 @@
     <string name="waifu_mode_description">启用后，AI的回复将按标点分割逐句发送，营造更自然的对话体验。</string>
     <string name="enable_waifu_mode">启用Waifu模式</string>
     <string name="waifu_mode_toggle_desc">AI回复将按标点分割发送</string>
+    <string name="waifu_merge_send">合并发送</string>
+    <string name="waifu_merge_send_desc">连续发送多条短消息时，停顿后合成一条消息交给AI处理</string>
+    <string name="waifu_merge_send_delay">合并发送间隔</string>
+    <string name="waifu_merge_send_delay_desc">用户最后一次发送后等待多久再提交给AI</string>
+    <string name="waifu_merge_send_delay_format">当前：%dms</string>
     <string name="typing_speed_settings">打字速度设置</string>
     <string name="typing_speed_desc">控制每字符的延迟时间，模拟真人打字节奏</string>
     <string name="current_speed_format">当前速度：每秒 %.1f 字符</string>
@@ -4013,7 +4022,7 @@
     <string name="appearance_prompt_placeholder">例如：long hair, purple eyes, sweater vest...</string>
     <string name="appearance_prompt_tip">提示：使用英文关键词描述外貌特征，多个关键词用逗号分隔</string>
     <string name="feature_explanation">功能说明</string>
-    <string name="waifu_mode_explanation">• 普通模式：AI回复一次性全部发送\n• Waifu模式：AI回复按句子分割，每句独立气泡\n• 智能延迟：根据句子长度计算延迟时间\n• 自动清理：移除状态标签，只显示纯文本\n• 可选功能：移除句末标点、编辑 Waifu 提示词、启用表情包\n• 适用场景：模拟更自然的对话节奏\n• 注意：此模式对工具调用的适配可能不佳</string>
+    <string name="waifu_mode_explanation">• 普通模式：AI回复一次性全部发送\n• Waifu模式：AI回复按句子分割，每句独立气泡\n• 智能延迟：根据句子长度计算延迟时间\n• 合并发送：用户连续发送短消息时，停顿后合成一条消息交给AI\n• 自动清理：移除状态标签，只显示纯文本\n• 可选功能：合并发送、移除句末标点、编辑 Waifu 提示词、启用表情包\n• 适用场景：模拟更自然的对话节奏\n• 注意：此模式对工具调用的适配可能不佳</string>
     <string name="settings_saved_message">设置已保存</string>
 
     <string name="settings_section_account">账号</string>

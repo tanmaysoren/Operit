@@ -1486,6 +1486,42 @@ class ChatViewModel(private val context: Context) : ViewModel() {
         )
     }
 
+    suspend fun removeLastVisibleUserMessageFromCurrentChat(text: String): Boolean {
+        val chatId = currentChatId.value ?: return false
+        val messageText = text.trim()
+        if (messageText.isBlank()) return false
+
+        val lastMessage = chatHistory.value.lastOrNull() ?: return false
+        if (lastMessage.sender != "user" || lastMessage.content != messageText) {
+            AppLogger.w(
+                TAG,
+                "Waifu merge send expected last visible user message, but found sender=${lastMessage.sender}, contentLength=${lastMessage.content.length}"
+            )
+            return false
+        }
+
+        chatHistoryDelegate.deleteMessagesByTimestamps(chatId, listOf(lastMessage.timestamp))
+        return true
+    }
+
+    suspend fun addVisibleUserMessageToCurrentChat(text: String) {
+        val messageText = text.trim()
+        if (messageText.isBlank()) return
+
+        val chatId = currentChatId.value ?: return
+        if (!chatHistoryDelegate.hasUserMessage(chatId)) {
+            chatHistoryDelegate.updateChatTitle(chatId, messageText)
+        }
+        chatHistoryDelegate.addMessageToChat(
+            ChatMessage(
+                sender = "user",
+                content = messageText,
+                roleName = context.getString(R.string.message_role_user)
+            ),
+            chatId
+        )
+    }
+
     private fun normalizeMentionDeletion(
         previous: TextFieldValue,
         proposed: TextFieldValue,

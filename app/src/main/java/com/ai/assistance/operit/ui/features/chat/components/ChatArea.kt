@@ -93,18 +93,51 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.Summarize
 import androidx.compose.ui.draw.alpha
+import com.ai.assistance.operit.api.chat.llmprovider.MediaLinkParser
 import com.ai.assistance.operit.ui.common.markdown.LocalMarkdownTextSelectionAutoScrollController
 import com.ai.assistance.operit.ui.common.markdown.MarkdownTextSelectionRequest
 import com.ai.assistance.operit.ui.common.markdown.MarkdownTextSelectionAutoScrollController
 import com.ai.assistance.operit.ui.features.chat.components.style.cursor.CursorStyleChatMessage
 import com.ai.assistance.operit.ui.features.chat.components.style.bubble.BubbleImageStyleConfig
 import com.ai.assistance.operit.ui.features.chat.components.style.bubble.BubbleStyleChatMessage
-import com.ai.assistance.operit.util.WaifuMessageProcessor
+import com.ai.assistance.operit.util.ChatMarkupRegex
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
+
+/**
+ * 清理消息中的XML标签，保留Markdown格式和纯文本内容
+ */
+private fun cleanXmlTags(content: String): String {
+    return content
+        // 移除状态标签
+        .replace(ChatMarkupRegex.statusTag, "")
+        .replace(ChatMarkupRegex.statusSelfClosingTag, "")
+        // 移除思考标签（包括 <think> 和 <thinking>）
+        .replace(ChatMarkupRegex.thinkTag, "")
+        .replace(ChatMarkupRegex.thinkSelfClosingTag, "")
+        // 移除搜索来源标签
+        .replace(ChatMarkupRegex.searchTag, "")
+        .replace(ChatMarkupRegex.searchSelfClosingTag, "")
+        // 移除工具标签
+        .replace(ChatMarkupRegex.toolTag, "")
+        .replace(ChatMarkupRegex.toolSelfClosingTag, "")
+        // 移除工具结果标签
+        .replace(ChatMarkupRegex.toolResultTag, "")
+        .replace(ChatMarkupRegex.toolResultSelfClosingTag, "")
+        // 移除emotion标签
+        .replace(ChatMarkupRegex.emotionTag, "")
+        // 移除附件与工作区上下文
+        .replace(ChatMarkupRegex.workspaceAttachmentTag, "")
+        .replace(ChatMarkupRegex.attachmentTag, "")
+        .replace(ChatMarkupRegex.attachmentSelfClosingTag, "")
+        // 移除多媒体链接标签
+        .let(MediaLinkParser::removeImageLinks)
+        .let(MediaLinkParser::removeMediaLinks)
+        .trim()
+}
 
 private fun isHiddenUserPlaceholder(message: ChatMessage): Boolean {
     return message.sender == "user" &&
@@ -677,7 +710,7 @@ private fun MessageItem(
     val isActionable = message.sender == "user" || message.sender == "ai"
     val isHiddenUserMessage = isHiddenUserPlaceholder(message)
     val currentTextSelectionRequest =
-        if (isActionable && !isHiddenUserMessage) textSelectionRequest else null
+        if (message.sender == "ai" && !isHiddenUserMessage) textSelectionRequest else null
 
     Box(
         modifier =
@@ -823,7 +856,7 @@ private fun MessageItem(
                         },
                         onClick = {
                             clipboardManager.setText(
-                                AnnotatedString(WaifuMessageProcessor.cleanContentForWaifu(message.content))
+                                AnnotatedString(cleanXmlTags(message.content))
                             )
                             Toast.makeText(
                                 context,
@@ -843,33 +876,35 @@ private fun MessageItem(
                         modifier = Modifier.height(36.dp)
                     )
 
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                stringResource(id = R.string.select_copy),
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontSize = 13.sp
-                            )
-                        },
-                        onClick = {
-                            selectionRequestId += 1L
-                            textSelectionRequest =
-                                MarkdownTextSelectionRequest(
-                                    id = selectionRequestId,
-                                    positionInWindow = lastPressPositionInWindow,
+                    if (message.sender == "ai") {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    stringResource(id = R.string.select_copy),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontSize = 13.sp
                                 )
-                            showContextMenu = false
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.SelectAll,
-                                contentDescription = stringResource(id = R.string.select_copy),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.size(16.dp)
-                            )
-                        },
-                        modifier = Modifier.height(36.dp)
-                    )
+                            },
+                            onClick = {
+                                selectionRequestId += 1L
+                                textSelectionRequest =
+                                    MarkdownTextSelectionRequest(
+                                        id = selectionRequestId,
+                                        positionInWindow = lastPressPositionInWindow,
+                                    )
+                                showContextMenu = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.SelectAll,
+                                    contentDescription = stringResource(id = R.string.select_copy),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            },
+                            modifier = Modifier.height(36.dp)
+                        )
+                    }
                 }
 
                 // 朗读消息选项

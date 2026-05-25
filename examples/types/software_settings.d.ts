@@ -146,6 +146,7 @@ export namespace SoftwareSettings {
         enable_direct_audio_processing?: boolean;
         enable_direct_video_processing?: boolean;
         enable_google_search?: boolean;
+        enable_claude_1h_prompt_cache?: boolean;
         enable_tool_call?: boolean;
         mnn_forward_type?: number;
         mnn_thread_count?: number;

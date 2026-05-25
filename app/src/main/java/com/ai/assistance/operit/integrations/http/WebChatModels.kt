@@ -62,7 +62,9 @@ data class WebChatSummary(
     @SerialName("active_streaming")
     val activeStreaming: Boolean = false,
     @SerialName("locked")
-    val locked: Boolean = false
+    val locked: Boolean = false,
+    @SerialName("pinned")
+    val pinned: Boolean = false
 )
 
 @Serializable
@@ -549,6 +551,10 @@ data class WebUpdateChatRequest(
     val locked: Boolean? = null,
     @SerialName("update_locked")
     val updateLocked: Boolean = false,
+    @SerialName("pinned")
+    val pinned: Boolean? = null,
+    @SerialName("update_pinned")
+    val updatePinned: Boolean = false,
     @SerialName("character_card_name")
     val characterCardName: String? = null,
     @SerialName("character_group_id")

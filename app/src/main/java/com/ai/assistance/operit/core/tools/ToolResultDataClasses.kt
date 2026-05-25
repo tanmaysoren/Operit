@@ -2267,6 +2267,7 @@ data class ModelConfigResultItem(
     val enableDirectAudioProcessing: Boolean,
     val enableDirectVideoProcessing: Boolean,
     val enableGoogleSearch: Boolean,
+    val enableClaude1hPromptCache: Boolean,
     val enableToolCall: Boolean,
     val requestLimitPerMinute: Int,
     val maxConcurrentRequests: Int,

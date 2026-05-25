@@ -560,8 +560,9 @@ class WebChatHttpBridge(
         val hasTitleChange = request.title != null
         val hasGroupChange = request.updateGroup
         val hasLockedChange = request.updateLocked && request.locked != null
+        val hasPinnedChange = request.updatePinned && request.pinned != null
         val hasBindingChange = request.updateBinding
-        if (!hasTitleChange && !hasGroupChange && !hasLockedChange && !hasBindingChange) {
+        if (!hasTitleChange && !hasGroupChange && !hasLockedChange && !hasPinnedChange && !hasBindingChange) {
             return jsonResponse(
                 NanoHTTPD.Response.Status.BAD_REQUEST,
                 WebErrorResponse("No update fields provided")
@@ -1323,7 +1324,8 @@ class WebChatHttpBridge(
             bindingAvatarUrl = bindingAvatarUrl,
             parentChatId = history.parentChatId,
             activeStreaming = core.activeStreamingChatIds.value.contains(history.id),
-            locked = history.locked
+            locked = history.locked,
+            pinned = history.pinned
         )
     }
 

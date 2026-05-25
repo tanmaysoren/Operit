@@ -1320,6 +1320,15 @@
           required: false
         },
         {
+          name: "enable_claude_1h_prompt_cache"
+          description: {
+            zh: "可选，是否启用 Claude 1h Prompt Cache"
+            en: "Optional Claude 1h prompt cache switch"
+          }
+          type: boolean
+          required: false
+        },
+        {
           name: "enable_tool_call"
           description: {
             zh: "可选，是否开启Tool Call"
@@ -1693,6 +1702,15 @@
           description: {
             zh: "可选，是否启用 Google Search"
             en: "Optional Google Search switch"
+          }
+          type: boolean
+          required: false
+        },
+        {
+          name: "enable_claude_1h_prompt_cache"
+          description: {
+            zh: "可选，是否启用 Claude 1h Prompt Cache"
+            en: "Optional Claude 1h prompt cache switch"
           }
           type: boolean
           required: false
@@ -3332,6 +3350,7 @@ async function create_model_config(params?: {
   enable_direct_audio_processing?: boolean;
   enable_direct_video_processing?: boolean;
   enable_google_search?: boolean;
+  enable_claude_1h_prompt_cache?: boolean;
   enable_tool_call?: boolean;
   mnn_forward_type?: number;
   mnn_thread_count?: number;
@@ -3391,6 +3410,7 @@ async function update_model_config(params?: {
   enable_direct_audio_processing?: boolean;
   enable_direct_video_processing?: boolean;
   enable_google_search?: boolean;
+  enable_claude_1h_prompt_cache?: boolean;
   enable_tool_call?: boolean;
   mnn_forward_type?: number;
   mnn_thread_count?: number;

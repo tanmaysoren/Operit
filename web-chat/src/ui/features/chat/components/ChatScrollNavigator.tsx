@@ -390,7 +390,6 @@ export function ChatScrollNavigator({
 }) {
   const shouldRenderNavigator = chatHistory.length > 1 && viewportHeightPx > 0;
   const [showNavigatorChip, setShowNavigatorChip] = useState(false);
-  const [showScrollToBottomButton, setShowScrollToBottomButton] = useState(false);
   const [userScrollSessionActive, setUserScrollSessionActive] = useState(false);
   const [showLocatorDialog, setShowLocatorDialog] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState<number | null>(
@@ -410,9 +409,6 @@ export function ChatScrollNavigator({
 
   useEffect(() => {
     autoScrollToBottomRef.current = autoScrollToBottom;
-    if (autoScrollToBottom) {
-      setShowScrollToBottomButton(false);
-    }
   }, [autoScrollToBottom]);
 
   useEffect(() => {
@@ -567,7 +563,6 @@ export function ChatScrollNavigator({
           scrollToBottomInteractionActiveRef.current
         ) {
           onAutoScrollToBottomChange(false);
-          setShowScrollToBottomButton(true);
         }
       } else {
         const isAtBottom =
@@ -576,7 +571,6 @@ export function ChatScrollNavigator({
           ) <= 1 && !hasNewerDisplayHistoryRef.current;
         if (isAtBottom && !autoScrollToBottomRef.current) {
           onAutoScrollToBottomChange(true);
-          setShowScrollToBottomButton(false);
         }
       }
 
@@ -665,52 +659,47 @@ export function ChatScrollNavigator({
     <>
       {shouldShowNavigatorControl ? (
         <div className="chat-scroll-navigator-chip">
-          {showNavigatorChip ? (
-            <button
-              aria-label="跳转到消息"
-              className="chat-scroll-navigator-locator-button"
-              onClick={() => {
-                setShowLocatorDialog(true);
-                setShowNavigatorChip(false);
-                userScrollSessionActiveRef.current = false;
-                setUserScrollSessionActive(false);
-              }}
-              type="button"
-            >
-              <span className="chat-scroll-navigator-pill">
-                <span className="chat-scroll-navigator-track">
-                  <span className="chat-scroll-navigator-line" />
-                  <span
-                    className="chat-scroll-navigator-dot"
-                    style={{ top: `${2 + progress * 30}px` }}
-                  />
-                </span>
+          <button
+            aria-label="跳转到消息"
+            className="chat-scroll-navigator-locator-button"
+            onClick={() => {
+              setShowLocatorDialog(true);
+              setShowNavigatorChip(false);
+              userScrollSessionActiveRef.current = false;
+              setUserScrollSessionActive(false);
+            }}
+            type="button"
+          >
+            <span className="chat-scroll-navigator-pill">
+              <span className="chat-scroll-navigator-track">
+                <span className="chat-scroll-navigator-line" />
+                <span
+                  className="chat-scroll-navigator-dot"
+                  style={{ top: `${2 + progress * 30}px` }}
+                />
               </span>
-              <span className="chat-scroll-navigator-arrow" />
-            </button>
-          ) : null}
-          {showScrollToBottomButton ? (
-            <button
-              aria-label="滚动到底部"
-              className="chat-scroll-navigator-bottom-button"
-              onClick={() => {
-                if (hasNewerDisplayHistory && onRequestLatestMessages) {
-                  onRequestLatestMessages();
-                }
-                if (scrollElement) {
-                  scrollElement.scrollTo({
-                    top: scrollElement.scrollHeight,
-                    behavior: 'smooth'
-                  });
-                }
-                onAutoScrollToBottomChange(true);
-                setShowScrollToBottomButton(false);
-              }}
-              type="button"
-            >
-              <ChevronDownIcon size={14} />
-            </button>
-          ) : null}
+            </span>
+            <span className="chat-scroll-navigator-arrow" />
+          </button>
+          <button
+            aria-label="滚动到底部"
+            className="chat-scroll-navigator-bottom-button"
+            onClick={() => {
+              if (hasNewerDisplayHistory && onRequestLatestMessages) {
+                onRequestLatestMessages();
+              }
+              if (scrollElement) {
+                scrollElement.scrollTo({
+                  top: scrollElement.scrollHeight,
+                  behavior: 'smooth'
+                });
+              }
+              onAutoScrollToBottomChange(true);
+            }}
+            type="button"
+          >
+            <ChevronDownIcon size={14} />
+          </button>
         </div>
       ) : null}
 

@@ -419,7 +419,8 @@ class ChatHistoryManager private constructor(private val context: Context) {
             parentChatId = this.parentChatId, // 映射parentChatId字段
             characterCardName = this.characterCardName, // 映射characterCardName字段
             characterGroupId = this.characterGroupId, // 映射characterGroupId字段
-            locked = this.locked
+            locked = this.locked,
+            pinned = this.pinned
         )
     }
 
@@ -626,6 +627,18 @@ class ChatHistoryManager private constructor(private val context: Context) {
                 chatDao.updateChatLocked(chatId, locked)
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Failed to update chat locked state for chat $chatId", e)
+                throw e
+            }
+        }
+    }
+
+    /** 更新聊天置顶状态 */
+    suspend fun updateChatPinned(chatId: String, pinned: Boolean) {
+        chatMutex(chatId).withLock {
+            try {
+                chatDao.updateChatPinned(chatId, pinned)
+            } catch (e: Exception) {
+                AppLogger.e(TAG, "Failed to update chat pinned state for chat $chatId", e)
                 throw e
             }
         }
@@ -1666,6 +1679,7 @@ class ChatHistoryManager private constructor(private val context: Context) {
                         characterCardName = parentChat.characterCardName,
                         characterGroupId = parentChat.characterGroupId,
                         locked = false,
+                        pinned = false,
                     )
 
                 chatDao.insertChat(branchEntity)
@@ -1734,7 +1748,8 @@ class ChatHistoryManager private constructor(private val context: Context) {
                         parentChatId = entity.parentChatId,
                         characterCardName = entity.characterCardName,
                         characterGroupId = entity.characterGroupId,
-                        locked = entity.locked
+                        locked = entity.locked,
+                        pinned = entity.pinned
                     )
                 }
             } catch (e: Exception) {
@@ -1774,7 +1789,8 @@ class ChatHistoryManager private constructor(private val context: Context) {
                     parentChatId = entity.parentChatId,
                     characterCardName = entity.characterCardName,
                     characterGroupId = entity.characterGroupId,
-                    locked = entity.locked
+                    locked = entity.locked,
+                    pinned = entity.pinned
                 )
             }
         }

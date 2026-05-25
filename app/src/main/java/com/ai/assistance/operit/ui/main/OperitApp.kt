@@ -87,6 +87,7 @@ fun OperitApp(
     routeNavArgs: Map<String, Any?> = emptyMap(),
     routeNavRequestId: Long = 0L,
     onShortcutNavHandled: (Long) -> Unit = {},
+    onCurrentNavItemChanged: (NavItem) -> Unit = {},
     onRouteNavHandled: (Long) -> Unit = {}
 ) {
     val navController = rememberNavController()
@@ -127,6 +128,12 @@ fun OperitApp(
     var topBarTitleContent by remember { mutableStateOf<TopBarTitleContent?>(null) }
     var lastHandledShortcutRequestId by remember { mutableStateOf(0L) }
     var lastHandledRouteRequestId by remember { mutableStateOf(0L) }
+
+    LaunchedEffect(selectedItem) {
+        selectedItem?.let { navItem ->
+            onCurrentNavItemChanged(navItem)
+        }
+    }
 
     LaunchedEffect(shortcutNavRequestId, shortcutNavRequest) {
         val requestNavItem = shortcutNavRequest

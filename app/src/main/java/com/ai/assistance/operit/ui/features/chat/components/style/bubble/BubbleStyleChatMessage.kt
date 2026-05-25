@@ -60,7 +60,6 @@ fun BubbleStyleChatMessage(
                 bubbleContentPaddingLeft = bubbleUserContentPaddingLeft,
                 bubbleContentPaddingRight = bubbleUserContentPaddingRight,
                 enableDialogs = enableDialogs,
-                textSelectionRequest = textSelectionRequest,
             )
         }
         "ai" -> {

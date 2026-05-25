@@ -51,9 +51,6 @@ import com.ai.assistance.operit.data.model.ChatMessageDisplayMode
 import com.ai.assistance.operit.data.preferences.CharacterCardManager
 import com.ai.assistance.operit.data.preferences.DisplayPreferencesManager
 import com.ai.assistance.operit.data.preferences.UserPreferencesManager
-import com.ai.assistance.operit.ui.common.markdown.MarkdownTextSelectionRequest
-import com.ai.assistance.operit.ui.common.markdown.StreamMarkdownRenderer
-import com.ai.assistance.operit.ui.common.markdown.StreamMarkdownRendererState
 import com.ai.assistance.operit.ui.features.chat.components.attachments.AttachmentViewerDialog
 import com.ai.assistance.operit.ui.features.chat.components.attachments.ChatAttachment
 import com.ai.assistance.operit.ui.features.chat.components.style.common.HiddenUserMessagePlaceholderContent
@@ -87,7 +84,6 @@ fun BubbleUserMessageComposable(
     bubbleContentPaddingLeft: Float = 12f,
     bubbleContentPaddingRight: Float = 12f,
     enableDialogs: Boolean = true,
-    textSelectionRequest: MarkdownTextSelectionRequest? = null,
 ) {
     val context = LocalContext.current
     val isHiddenPlaceholder =
@@ -141,7 +137,6 @@ fun BubbleUserMessageComposable(
     val replyInfo = parseResult.replyInfo
     val imageLinks = parseResult.imageLinks
     val proxySenderName = if (isHiddenPlaceholder) null else parseResult.proxySenderName
-    val rendererState = remember(message.timestamp) { StreamMarkdownRendererState() }
 
     val isProxySender = !proxySenderName.isNullOrBlank()
     val proxyAvatarUri by remember(proxySenderName) {
@@ -222,20 +217,6 @@ fun BubbleUserMessageComposable(
         } else {
             bubbleImageStyle
         }
-
-    @Composable
-    fun UserMessageMarkdown(modifier: Modifier = Modifier) {
-        StreamMarkdownRenderer(
-            content = textContent,
-            textColor = effectiveTextColor,
-            backgroundColor = effectiveBackgroundColor,
-            enableDialogs = enableDialogs,
-            modifier = modifier,
-            state = rendererState,
-            fillMaxWidth = false,
-            textSelectionRequest = textSelectionRequest,
-        )
-    }
 
     MaterialTheme(typography = bubbleTypography) {
     Column(
@@ -456,7 +437,11 @@ fun BubbleUserMessageComposable(
                                     subtitleColor = effectiveTextColor.copy(alpha = 0.72f),
                                 )
                             } else {
-                                UserMessageMarkdown()
+                                Text(
+                                    text = textContent,
+                                    color = effectiveTextColor,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                )
                             }
                         }
                     } else {
@@ -511,7 +496,8 @@ fun BubbleUserMessageComposable(
                                     )
                                 }
                             } else {
-                                UserMessageMarkdown(
+                                Text(
+                                    text = textContent,
                                     modifier =
                                         Modifier.padding(
                                             start = bubbleContentPaddingLeft.dp,
@@ -519,6 +505,8 @@ fun BubbleUserMessageComposable(
                                             end = bubbleContentPaddingRight.dp,
                                             bottom = 12.dp,
                                         ),
+                                    color = effectiveTextColor,
+                                    style = MaterialTheme.typography.bodyMedium,
                                 )
                             }
                         }
@@ -590,7 +578,11 @@ fun BubbleUserMessageComposable(
                                     subtitleColor = effectiveTextColor.copy(alpha = 0.72f),
                                 )
                             } else {
-                                UserMessageMarkdown()
+                                Text(
+                                    text = textContent,
+                                    color = effectiveTextColor,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                )
                             }
                         }
                     } else {
@@ -645,7 +637,8 @@ fun BubbleUserMessageComposable(
                                     )
                                 }
                             } else {
-                                UserMessageMarkdown(
+                                Text(
+                                    text = textContent,
                                     modifier =
                                         Modifier.padding(
                                             start = bubbleContentPaddingLeft.dp,
@@ -653,6 +646,8 @@ fun BubbleUserMessageComposable(
                                             end = bubbleContentPaddingRight.dp,
                                             bottom = 12.dp,
                                         ),
+                                    color = effectiveTextColor,
+                                    style = MaterialTheme.typography.bodyMedium
                                 )
                             }
                         }

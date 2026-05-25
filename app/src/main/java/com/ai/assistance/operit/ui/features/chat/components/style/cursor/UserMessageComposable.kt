@@ -63,9 +63,6 @@ import androidx.compose.ui.window.Dialog
 import com.ai.assistance.operit.R
 import com.ai.assistance.operit.data.model.ChatMessage
 import com.ai.assistance.operit.data.model.ChatMessageDisplayMode
-import com.ai.assistance.operit.ui.common.markdown.MarkdownTextSelectionRequest
-import com.ai.assistance.operit.ui.common.markdown.StreamMarkdownRenderer
-import com.ai.assistance.operit.ui.common.markdown.StreamMarkdownRendererState
 import com.ai.assistance.operit.ui.features.chat.components.attachments.AttachmentViewerDialog
 import com.ai.assistance.operit.ui.features.chat.components.attachments.ChatAttachment
 import com.ai.assistance.operit.ui.features.chat.components.style.common.HiddenUserMessagePlaceholderContent
@@ -95,7 +92,6 @@ fun UserMessageComposable(
     enableLiquidGlass: Boolean = false,
     enableWaterGlass: Boolean = false,
     enableDialogs: Boolean = true,
-    textSelectionRequest: MarkdownTextSelectionRequest? = null,
 ) {
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
@@ -128,7 +124,6 @@ fun UserMessageComposable(
     val imageLinks = parseResult.imageLinks
     val proxySenderName = if (isHiddenPlaceholder) null else parseResult.proxySenderName
     val isProxySender = !proxySenderName.isNullOrBlank()
-    val rendererState = remember(message.timestamp) { StreamMarkdownRendererState() }
     val effectiveBackgroundColor =
         when {
             isHiddenPlaceholder -> Color.Transparent
@@ -307,15 +302,10 @@ fun UserMessageComposable(
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
 
-                    // Display main text content with inline attachments
-                    StreamMarkdownRenderer(
-                        content = textContent,
-                        textColor = effectiveTextColor,
-                        backgroundColor = effectiveBackgroundColor,
-                        enableDialogs = enableDialogs,
-                        modifier = Modifier.fillMaxWidth(),
-                        state = rendererState,
-                        textSelectionRequest = textSelectionRequest,
+                    Text(
+                        text = textContent,
+                        color = effectiveTextColor,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }

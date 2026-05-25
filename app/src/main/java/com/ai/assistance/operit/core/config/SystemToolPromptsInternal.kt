@@ -2313,6 +2313,12 @@ object SystemToolPromptsInternal {
                                         required = false
                                     ),
                                     ToolParameterSchema(
+                                        name = "enable_claude_1h_prompt_cache",
+                                        type = "boolean",
+                                        description = "optional, Claude 1-hour prompt cache switch",
+                                        required = false
+                                    ),
+                                    ToolParameterSchema(
                                         name = "enable_tool_call",
                                         type = "boolean",
                                         description = "optional, enable provider-native tool call",
@@ -5064,6 +5070,12 @@ object SystemToolPromptsInternal {
                                         name = "enable_google_search",
                                         type = "boolean",
                                         description = "可选，Gemini 搜索增强开关",
+                                        required = false
+                                    ),
+                                    ToolParameterSchema(
+                                        name = "enable_claude_1h_prompt_cache",
+                                        type = "boolean",
+                                        description = "可选，Claude 1 小时提示缓存开关",
                                         required = false
                                     ),
                                     ToolParameterSchema(
