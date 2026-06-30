@@ -272,8 +272,8 @@ class RepoMarketPublishViewModel(
             allowPublicUpdates = allowPublicUpdates,
             version = MarketV2PublishVersion(
                 version = version.ifBlank { "1.0.0" },
-                formatVersion = "${type.wireValue}_v2",
-                minAppVersion = CURRENT_APP_VERSION
+                formatVer = "${type.wireValue}_v2",
+                minAppVer = CURRENT_APP_VERSION
             ),
             source = MarketV2PublishSource(url = repoTarget.sourceUrl),
             repoVersion = MarketV2PublishRepoVersion(

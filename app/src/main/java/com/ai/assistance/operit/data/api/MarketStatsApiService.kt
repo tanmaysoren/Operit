@@ -356,11 +356,11 @@ data class MarketV2Asset(
 data class MarketV2Version(
     val id: String = "",
     val version: String = "",
-    val formatVersion: String = "",
+    val formatVer: String = "",
     val publisherId: String = "",
     val publisher: MarketV2Author? = null,
-    val minAppVersion: String? = null,
-    val maxAppVersion: String? = null,
+    val minAppVer: String? = null,
+    val maxAppVer: String? = null,
     val changelog: String = "",
     val installConfig: String = "",
     val stateCode: String = "approved",
@@ -432,9 +432,9 @@ data class MarketV2EntryUpdateRequest(
 @Serializable
 data class MarketV2PublishVersion(
     val version: String,
-    val formatVersion: String,
-    val minAppVersion: String,
-    val maxAppVersion: String? = null,
+    val formatVer: String,
+    val minAppVer: String,
+    val maxAppVer: String? = null,
     val changelog: String? = null,
     val projectId: String? = null,
     val runtimePackageId: String? = null
@@ -704,8 +704,8 @@ class MarketStatsApiService {
                 displayName = entry.title,
                 description = entry.detail,
                 sourceFileName = asset.assetName.ifBlank { asset.name },
-                minSupportedAppVersion = version.minAppVersion,
-                maxSupportedAppVersion = version.maxAppVersion,
+                minSupportedAppVersion = version.minAppVer,
+                maxSupportedAppVersion = version.maxAppVer,
                 publishedAt = version.publishedAt,
                 state = version.stateCode.toPublicationState(),
                 entry = entry.copy(

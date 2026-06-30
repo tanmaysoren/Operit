@@ -535,8 +535,8 @@ private fun MarketVersionHistoryRow(
                 text =
                     stringResource(
                         R.string.supported_app_versions_colon,
-                        version.minAppVersion.orEmpty(),
-                        version.maxAppVersion.orEmpty()
+                        version.minAppVer.orEmpty(),
+                        version.maxAppVer.orEmpty()
                     ),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

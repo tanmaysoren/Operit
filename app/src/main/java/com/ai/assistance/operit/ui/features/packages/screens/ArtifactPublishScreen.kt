@@ -84,8 +84,8 @@ private fun com.ai.assistance.operit.data.api.MarketV2Entry.toArtifactPublishEdi
         categoryId = categoryId,
         allowPublicUpdates = allowPublicUpdates,
         version = versionValue?.version.orEmpty(),
-        minSupportedAppVersion = versionValue?.minAppVersion,
-        maxSupportedAppVersion = versionValue?.maxAppVersion,
+        minSupportedAppVersion = versionValue?.minAppVer,
+        maxSupportedAppVersion = versionValue?.maxAppVer,
         runtimePackageId = versionValue?.runtimePackageId.orEmpty(),
         normalizedId = id,
         sourceFileName = assetValue?.assetName.orEmpty().ifBlank { assetValue?.name.orEmpty() }

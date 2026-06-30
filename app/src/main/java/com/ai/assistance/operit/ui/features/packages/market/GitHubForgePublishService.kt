@@ -358,9 +358,9 @@ class GitHubForgePublishService(
                 detail = payload.projectDescription.ifBlank { payload.description },
                 version = MarketV2PublishVersion(
                     version = payload.version,
-                    formatVersion = payload.type.marketFormatVersion(),
-                    minAppVersion = payload.minSupportedAppVersion ?: CURRENT_APP_VERSION,
-                    maxAppVersion = payload.maxSupportedAppVersion,
+                    formatVer = payload.type.marketFormatVersion(),
+                    minAppVer = payload.minSupportedAppVersion ?: CURRENT_APP_VERSION,
+                    maxAppVer = payload.maxSupportedAppVersion,
                     projectId = payload.projectId,
                     runtimePackageId = payload.runtimePackageId
                 ),
@@ -391,9 +391,9 @@ class GitHubForgePublishService(
                 latestVersion = MarketV2Version(
                     id = response.versionId,
                     version = payload.version,
-                    formatVersion = payload.type.marketFormatVersion(),
-                    minAppVersion = payload.minSupportedAppVersion ?: CURRENT_APP_VERSION,
-                    maxAppVersion = payload.maxSupportedAppVersion,
+                    formatVer = payload.type.marketFormatVersion(),
+                    minAppVer = payload.minSupportedAppVersion ?: CURRENT_APP_VERSION,
+                    maxAppVer = payload.maxSupportedAppVersion,
                     stateCode = "pending",
                     projectId = payload.projectId,
                     runtimePackageId = payload.runtimePackageId
